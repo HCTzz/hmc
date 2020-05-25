@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctt.web.mapper.VideoMapper">
+
+    <select id="getVideoList" resultType="com.alibaba.fastjson.JSONObject">
+        select * from sys_file
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="searchName != null and searchName != ''">
+                AND fileName like concat('%',${searchName},'%')
+            </if>
+            <if test="1 == 1">
+                AND fileDuration is not null
+            </if>
+        </trim>
+    </select>
+
+</mapper>

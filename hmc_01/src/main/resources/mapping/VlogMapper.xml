@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctt.web.mapper.VlogMapper">
+
+    <sql id="where">
+        <trim prefixOverrides="AND" prefix="WHERE">
+            <if test="searchName != null and searchName != ''">
+                AND title like concat('%',#{searchName},'%')
+            </if>
+            <if test="deleteStatus = null">
+                AND deleteStatus = 1
+            </if>
+        </trim>
+    </sql>
+
+    <insert id="create" parameterType="com.ctt.web.bean.Vlog">
+        insert into vlog(id,title,content,createTime,updateTime,deleteStatus)
+        values (#{id},#{title},#{content},#{createTime},#{updateTime},#{deleteStatus})
+    </insert>
+
+    <update id="update" parameterType="com.ctt.web.bean.Vlog">
+        update vlog
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="deleteStatus != null and deleteStatus != ''">
+                deleteStatus = #{deleteStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="com.ctt.web.bean.Vlog">
+        delete
+        from vlog
+        where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultType="com.ctt.web.bean.Vlog">
+        select * from vlog
+        <include refid="where"></include>
+    </select>
+    <select id="getVlog" resultType="com.ctt.web.bean.Vlog">
+        select * from vlog
+        where id = #{id}
+    </select>
+</mapper>

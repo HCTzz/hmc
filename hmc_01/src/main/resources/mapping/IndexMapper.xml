@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctt.web.mapper.IndexMapper">
+    <select id="getDayCountList" resultType="map">
+        select
+        date_format(t.day,'%Y-%m-%d')day,
+        (select COUNT(v.id)  from vlog v where date_format(v.createTime,'%Y-%m-%d') = t.day) logCount,
+        (select COUNT(p.id)  from photo p where date_format(p.createTime,'%Y-%m-%d') = t.day) photoCount,
+        (select COUNT(s.fileKey)  from sys_file s where date_format(s.createTime,'%Y-%m-%d') = t.day) videoCount
+        from
+        (
+        select DATE_SUB(CURDATE(), INTERVAL 6 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 5 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 4 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 3 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 2 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 1 DAY) day
+        UNION
+        select DATE_SUB(CURDATE(), INTERVAL 0 DAY) day
+        )t
+    </select>
+</mapper>

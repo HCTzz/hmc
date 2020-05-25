@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ctt.web.mapper.PhotoMapper">
+
+    <sql id="where">
+        <trim prefixOverrides="AND" prefix="WHERE">
+            <if test="searchName != null and searchName != ''">
+                AND title like concat('%',#{searchName},'%')
+            </if>
+
+        </trim>
+    </sql>
+
+    <insert id="addPhoto" parameterType="com.ctt.web.bean.Photo">
+        insert into photo(id,pid,name,createTime,updateTime,fileId)
+        values (#{id},#{pid},#{name},now(),now(),#{fileId})
+    </insert>
+
+    <insert id="batchAddPhoto" parameterType="list">
+        insert into photo(id,pid,name,createTime,updateTime,fileId)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.pid},#{item.name},now(),now(),#{item.fileId})
+        </foreach>
+
+    </insert>
+
+    <update id="updatePhoto" parameterType="com.ctt.web.bean.Photo">
+        update photo
+        set name = #{name},
+        updateTime = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deletePhoto">
+        delete from photo where id = #{id} or pid = #{id}
+    </delete>
+
+    <select id="getPhotoList" resultType="com.ctt.web.bean.Photo">
+        select p.id,p.pid,p.name,p.createTime,updateTime,
+        IFNULL(p.fileId,(select s.fileId from photo s where s.pid = p.id order by createTime asc limit 1))fileId,
+        IFNULL((select count(s.id) from photo s where s.pid = p.id),0) imgCount
+        from photo p
+        where
+        pid = #{pid}
+        <if test="searchName != null and searchName != ''">
+            AND name like concat('%',#{searchName},'%')
+        </if>
+    </select>
+    <select id="getPhotoById" resultType="com.ctt.web.bean.Photo">
+        select *,
+        IFNULL((select count(s.id) from photo s where s.pid = p.id),0) imgCount
+        from photo p
+        where
+        id = #{id}
+    </select>
+</mapper>
