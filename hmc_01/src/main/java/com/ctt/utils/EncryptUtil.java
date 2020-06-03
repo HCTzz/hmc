@@ -1,7 +1,10 @@
 package com.ctt.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
@@ -14,10 +17,16 @@ import java.math.BigInteger;
  */
 public class EncryptUtil {
 
-    //密钥 (需要前端和后端保持一致)
+    /**
+     * 密钥 (需要前端和后端保持一致)
+     */
     private static final String KEY = "win-wx-AES-crypt";
-    //算法
+    /**
+     * 算法
+     */
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
+
+    private static Logger log = LoggerFactory.getLogger(EncryptUtil.class);
 
     public static String getKey() {
         return KEY;
@@ -34,8 +43,8 @@ public class EncryptUtil {
         try {
             return aesDecrypt(encrypt, KEY);
         } catch (Exception e) {
-            e.printStackTrace();
-            return "";
+            log.error("AES解密失败【{}】,key:【{}】, Exception : 【{}】",encrypt,KEY,e.getMessage());
+            return encrypt;
         }
     }
 
@@ -50,7 +59,7 @@ public class EncryptUtil {
         try {
             return aesEncrypt(content, KEY);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("AES加密失败【{}】,key:【{}】Exception : 【{}】",content,KEY,e.getMessage());
             return "";
         }
     }

@@ -1,5 +1,6 @@
 package com.ctt.response;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ctt.constant.SystemStatusEnum;
 import org.apache.commons.lang3.StringUtils;
 
@@ -94,5 +95,10 @@ public class WebResBean {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString(){
+        return JSONObject.toJSON(this).toString();
     }
 }

@@ -6,8 +6,10 @@ import com.ctt.response.WebResBean;
 import com.ctt.web.bean.Photo;
 import com.ctt.web.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +35,9 @@ public class PhotoController {
      * @return
      */
     @GetMapping("photoList")
-    public WebResBean photoList(String pid, String searchName, String hasOwer, Integer page, Integer limit) {
+    public WebResBean photoList(String pid, String searchName, String hasOwer, Integer page, Integer limit, Authentication authentication) {
+        System.out.println(authentication.getPrincipal());
+
         JSONObject photoList = photoService.getPhotoList(pid, page, limit, searchName, hasOwer);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
         wsb.setData(photoList);

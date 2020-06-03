@@ -2,7 +2,9 @@ package com.ctt;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -14,18 +16,21 @@ import java.util.Enumeration;
 @SpringBootTest
 public class FilePreviewApplicationTests {
 
-    @Resource
-    public com.alibaba.druid.pool.DruidDataSource dataSource;
+//    @Resource
+//    public com.alibaba.druid.pool.DruidDataSource dataSource;
+
+    @Autowired
+    private ApplicationContext context;
 
     @Test
     public void contextLoads() throws InterruptedException, IOException {
-
-        Enumeration<URL> resources = ClassLoader.getSystemResources("META-INF/spring-autoconfigure-metadata.properties");
-        int i = 0;
-        while (resources.hasMoreElements()) {
-            i++;
-        }
-        System.out.println(i);
+        context.getBean("");
+//        Enumeration<URL> resources = ClassLoader.getSystemResources("META-INF/spring-autoconfigure-metadata.properties");
+//        int i = 0;
+//        while (resources.hasMoreElements()) {
+//            i++;
+//        }
+//        System.out.println(i);
 
 
 //		Config config = new Config();
@@ -58,14 +63,14 @@ public class FilePreviewApplicationTests {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        Enumeration<URL> resources = ClassLoader.getSystemResources("META-INF/spring-autoconfigure-metadata.properties");
-        int i = 0;
-        while (resources.hasMoreElements()) {
-            resources.nextElement();
-            i++;
-        }
-        System.out.println(i);
-    }
+//    public static void main(String[] args) throws IOException {
+//        Enumeration<URL> resources = ClassLoader.getSystemResources("META-INF/spring-autoconfigure-metadata.properties");
+//        int i = 0;
+//        while (resources.hasMoreElements()) {
+//            resources.nextElement();
+//            i++;
+//        }
+//        System.out.println(i);
+//    }
 
 }

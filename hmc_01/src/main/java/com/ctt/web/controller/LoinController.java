@@ -5,6 +5,8 @@ import com.ctt.response.WebResBean;
 import com.ctt.utils.EncryptUtil;
 import com.ctt.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,17 +34,24 @@ public class LoinController {
      * 查询当前登录用户的信息
      */
     @GetMapping("/info")
-    public WebResBean info(String token) {
-        WebResBean rsb = userService.getInfo(token);
+    public WebResBean info(Authentication authentication) {
+        String name = authentication.getName();
+        System.out.println(name);
+        WebResBean rsb = userService.getInfo(name);
         rsb.setCode(SystemStatusEnum.E_20000.getCode());
         return rsb;
     }
 
     @PostMapping("logout")
-    public WebResBean logout(String token) {
-        System.out.println("token : " + token);
+    public WebResBean logout() {
         WebResBean rsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
         return rsb;
+    }
+
+    @GetMapping("session/invalid")
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    public WebResBean sessionInvalid() {
+        return WebResBean.createResBean(SystemStatusEnum.E_20011);
     }
 
 

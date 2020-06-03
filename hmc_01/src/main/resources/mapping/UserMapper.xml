@@ -11,4 +11,8 @@
     <select id="getInfo" resultType="com.ctt.web.bean.User">
         select username,nickname,status,avatar,'admin' roles from sys_user where username = #{username} limit 1
     </select>
+
+    <select id="getUserLogin" resultType="com.ctt.web.bean.User">
+        select username,password,nickname from sys_user where username = #{username} limit 1
+    </select>
 </mapper>

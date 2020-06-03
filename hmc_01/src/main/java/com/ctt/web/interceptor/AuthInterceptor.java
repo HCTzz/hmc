@@ -30,17 +30,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");
-        if(StringUtils.isBlank(token)){
-            throw new AuthException("invalid request");
-        }
-        String userName = EncryptUtil.getUserName(token);
-        request.getServletContext();
 
-        boolean valid = userService.validUserName(userName);
-        if(!valid){
-            throw new AuthException("invalid token");
-        }
         return true;
     }
 

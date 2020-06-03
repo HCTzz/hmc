@@ -33,9 +33,9 @@ public class UserService {
         return rsb;
     }
 
-    public WebResBean getInfo(String token) {
+    public WebResBean getInfo(String userName) {
         WebResBean rsb = new WebResBean();
-        rsb.setData(userMapper.getInfo(EncryptUtil.getUserName(token)));
+        rsb.setData(userMapper.getInfo(userName));
         return rsb;
     }
 
@@ -46,4 +46,9 @@ public class UserService {
         }
         return false;
     }
+
+    public User findByUerName(String userName){
+        return userMapper.getUserLogin(userName);
+    }
+
 }

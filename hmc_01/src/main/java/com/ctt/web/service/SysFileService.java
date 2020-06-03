@@ -44,8 +44,7 @@ public class SysFileService extends BaseService {
     @Value("${file.rootKey:0}")
     private String rootKey;
 
-    //测试使用
-    @Value("http://localhost:8012/sysFile/priviewImg?fileKey=")
+    @Value("${fileUploadPath}")
     private String fileUploadPath;
 
     public JSONObject getFileByID(String filekey) {

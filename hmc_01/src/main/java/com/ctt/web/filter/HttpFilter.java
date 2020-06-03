@@ -37,7 +37,6 @@ public class HttpFilter implements Filter, ApplicationContextAware {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         log.debug("request --- ip【{}】url【】time【】", request.getRemoteHost(), request.getRequestURI(), LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
         HttpServletResponse res = (HttpServletResponse) servletResponse;
-        res.setHeader("Access-Control-Allow-Origin", "*");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

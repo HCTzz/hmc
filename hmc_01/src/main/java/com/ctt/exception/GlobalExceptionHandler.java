@@ -6,6 +6,7 @@ import com.ctt.response.WebResBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -32,12 +33,21 @@ public class GlobalExceptionHandler {
         return WebResBean.createResBean(SystemStatusEnum.E_500);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public WebResBean authException(HttpServletRequest req, UsernameNotFoundException e) {
+        WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20012);
+        resBean.setMessage(e.getMessage());
+        return resBean;
+    }
+
     @ExceptionHandler(AuthException.class)
     public WebResBean authException(HttpServletRequest req, AuthException e) {
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20012);
         resBean.setMessage(e.getMessage());
         return resBean;
     }
+
+
 
     @ExceptionHandler(value = Exception.class)
     public WebResBean defaultErrorHandler(HttpServletRequest req, Exception e) {

@@ -15,4 +15,5 @@ public interface UserMapper {
 
     User getInfo(@Param("username") String username);
 
+    User getUserLogin(@Param("username") String username);
 }

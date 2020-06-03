@@ -3,12 +3,14 @@ package com.ctt.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ctt.constant.SystemStatusEnum;
 import com.ctt.response.WebResBean;
+import com.ctt.web.config.security.UserInfo;
 import com.ctt.web.service.SysFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +18,18 @@ import ws.schild.jave.EncoderException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -91,22 +102,29 @@ public class SystemFileController extends BaseController {
             if (StringUtils.isBlank(coverPath)) {
                 coverPath = file.getString("filePath");
             }
-            Files.copy(Paths.get(coverPath), outputStream);
-            outputStream.flush();
+            FileChannel open = FileChannel.open(Paths.get(coverPath), StandardOpenOption.READ);
+            WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+            open.transferTo(0,open.size(),writableByteChannel);
+//            Files.copy(Paths.get(coverPath), outputStream);
+//            outputStream.flush();
         } catch (Exception e) {
             throw e;
         }
     }
 
     @RequestMapping("downloadFile")
-    public void downloadFile(String fileKey, HttpServletResponse response) throws IOException {
+    public void downloadFile(String fileKey, HttpServletResponse response, Authentication authentication) throws IOException {
         try (ServletOutputStream outputStream = response.getOutputStream()) {
             JSONObject file = sysFileService.getFileByID(fileKey);
-            String filePath = file.getString("filePath");
+            String coverPath = file.getString("coverPath");
+            if (StringUtils.isBlank(coverPath)) {
+                coverPath = file.getString("filePath");
+            }
             response.addHeader("Content-Disposition",
                     "attachment;filename=" + new String((file.getString("fileName") + "." + file.getString("fileExt")).getBytes("UTF-8"), "ISO-8859-1"));
-            Files.copy(Paths.get(filePath), outputStream);
-            outputStream.flush();
+            FileChannel open = FileChannel.open(Paths.get(coverPath), StandardOpenOption.READ);
+            WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+            open.transferTo(0,open.size(),writableByteChannel);
         } catch (Exception e) {
             throw e;
         }

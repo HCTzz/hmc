@@ -3,6 +3,7 @@ package com.ctt.web.config;
 import com.ctt.web.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,11 +26,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         // 多个拦截器组成一个拦截器链
         // addPathPatterns 用于添加拦截规则，/**表示拦截所有请求
         // excludePathPatterns 用户排除拦截
-        registry.addInterceptor(authInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/user/login","/user/logout","/video/list"
-                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList"
-                ,"/photo/photoList","/sysFile/filelist","/sysFile/getFile","/sysFile/priviewImg"
-                );
+//        registry.addInterceptor(authInterceptor()).addPathPatterns("/**")
+//                .excludePathPatterns("/user/login","/user/logout","/video/list"
+//                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList"
+//                ,"/photo/photoList","/sysFile/filelist","/sysFile/getFile","/sysFile/priviewImg"
+//                );
     }
 
 
