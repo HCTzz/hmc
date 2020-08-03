@@ -2,6 +2,7 @@ package com.ctt.web.config.security;
 
 import com.ctt.constant.SystemStatusEnum;
 import com.ctt.response.WebResBean;
+import com.ctt.utils.ResponseUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,8 @@ public class LoginUrlAuthenticationEntryPoint implements AuthenticationEntryPoin
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-            response.setContentType("application/json;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            StringBuffer sb = new StringBuffer();
-            WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20011);
-            sb.append(resBean.toString());
-            out.write(sb.toString());
-            out.flush();
-            out.close();
+        WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20011);
+        ResponseUtils.out(request,response,resBean);
+
     }
 }

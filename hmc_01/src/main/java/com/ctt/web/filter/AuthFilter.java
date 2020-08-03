@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
-        response.setHeader("Access-Control-Allow-Headers", "token");
+        response.setHeader("Access-Control-Allow-Headers", "token,remember");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

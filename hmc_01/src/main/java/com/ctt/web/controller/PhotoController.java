@@ -36,8 +36,6 @@ public class PhotoController {
      */
     @GetMapping("photoList")
     public WebResBean photoList(String pid, String searchName, String hasOwer, Integer page, Integer limit, Authentication authentication) {
-        System.out.println(authentication.getPrincipal());
-
         JSONObject photoList = photoService.getPhotoList(pid, page, limit, searchName, hasOwer);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
         wsb.setData(photoList);

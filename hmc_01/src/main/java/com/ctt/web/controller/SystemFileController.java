@@ -96,17 +96,15 @@ public class SystemFileController extends BaseController {
     @RequestMapping("priviewImg")
     @ResponseBody
     public void priivewImg(String fileKey, HttpServletResponse response) throws IOException {
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            JSONObject file = sysFileService.getFileByID(fileKey);
-            String coverPath = file.getString("coverPath");
-            if (StringUtils.isBlank(coverPath)) {
-                coverPath = file.getString("filePath");
-            }
-            FileChannel open = FileChannel.open(Paths.get(coverPath), StandardOpenOption.READ);
+        JSONObject file = sysFileService.getFileByID(fileKey);
+        String coverPath = file.getString("coverPath");
+        if (StringUtils.isBlank(coverPath)) {
+            coverPath = file.getString("filePath");
+        }
+        try (ServletOutputStream outputStream = response.getOutputStream();
+            FileChannel open = FileChannel.open(Paths.get(coverPath), StandardOpenOption.READ);) {
             WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
             open.transferTo(0,open.size(),writableByteChannel);
-//            Files.copy(Paths.get(coverPath), outputStream);
-//            outputStream.flush();
         } catch (Exception e) {
             throw e;
         }

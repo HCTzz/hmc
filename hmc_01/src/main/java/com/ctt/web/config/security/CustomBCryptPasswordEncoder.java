@@ -6,8 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
+ * @author Administrator
  * @Description
- * @auther HHF
  * @create 2020-05-28 下午 3:55
  */
 public class CustomBCryptPasswordEncoder extends BCryptPasswordEncoder {

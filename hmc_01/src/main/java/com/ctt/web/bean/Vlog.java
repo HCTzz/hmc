@@ -1,12 +1,14 @@
 package com.ctt.web.bean;
 
+import java.io.Serializable;
+
 /**
  * @author Administrator
  * @Description
  * @auther HHF
  * @create 2020-04-17 下午 3:11
  */
-public class Vlog {
+public class Vlog implements Serializable {
 
     private String id;
 

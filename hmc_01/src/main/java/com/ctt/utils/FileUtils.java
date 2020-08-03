@@ -3,19 +3,17 @@ package com.ctt.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.ctt.web.mapper.SysFileMapper;
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 import ws.schild.jave.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,7 +245,8 @@ public class FileUtils {
      * @throws EncoderException
      * @throws IOException
      */
-    public void createVideoCover(@NotNull String videoPath, String imgPath, MultimediaObject videoInfo) throws EncoderException, IOException {
+    public void createVideoCover(String videoPath, String imgPath, MultimediaObject videoInfo) throws EncoderException, IOException {
+        Assert.notNull(videoPath,() -> "videoPath can be not null");
         DefaultFFMPEGLocator locator = new DefaultFFMPEGLocator();
         String executablePath = locator.getFFMPEGExecutablePath();
         List<String> commands = new java.util.ArrayList<String>();

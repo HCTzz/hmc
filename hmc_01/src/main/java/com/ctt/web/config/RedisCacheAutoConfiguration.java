@@ -19,8 +19,8 @@ import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import java.io.Serializable;
 
 /**
+ * @author Administrator
  * @Description
- * @auther HHF
  * @create 2020-05-29 下午 4:18
  */
 @Configuration
@@ -41,14 +41,15 @@ public class RedisCacheAutoConfiguration {
         // 源码默认为Lax
         // private String sameSite = "Lax";
 //        cookieSerializer.setSameSite(null);
-//        cookieSerializer.setCookieName("sessionId");
+        cookieSerializer.setCookieName("SESSIONID");
 //        cookieSerializer.setCookieMaxAge(3000);
-//        cookieSerializer.setUseHttpOnlyCookie(false);
+        cookieSerializer.setUseHttpOnlyCookie(false);
+        cookieSerializer.setCookiePath("/");
         return cookieSerializer;
     }
 
-    @Bean
-    public HeaderHttpSessionIdResolver headerHttpSessionIdResolver(){
-        return new HeaderHttpSessionIdResolver("token");
-    }
+//    @Bean
+//    public HeaderHttpSessionIdResolver headerHttpSessionIdResolver(){
+//        return new HeaderHttpSessionIdResolver("token");
+//    }
 }

@@ -6,10 +6,7 @@ import com.ctt.response.WebResBean;
 import com.ctt.web.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 页面跳转
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yudian-it
  * @date 2017/12/27
  */
-@RestController
+@Controller
 public class IndexController {
 
     @RequestMapping(value = "index", method = RequestMethod.GET)
@@ -27,13 +24,14 @@ public class IndexController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String root() {
-        return "redirect:/index";
+        return "index";
     }
 
     @Autowired
     private IndexService indexService;
 
     @GetMapping("topCount")
+    @ResponseBody
     public WebResBean topCount(){
         JSONObject topCountData = indexService.getTopCountData();
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20000);
@@ -42,6 +40,7 @@ public class IndexController {
     }
 
     @GetMapping("lineChart")
+    @ResponseBody
     public WebResBean lineChart(){
         JSONObject lineChartData = indexService.getLineChartData();
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20000);

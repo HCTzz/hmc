@@ -39,6 +39,7 @@ public class DruidConfig {
 
     @Bean
     public FilterRegistrationBean webStatFilter() {
+
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new WebStatFilter());
         filterRegistrationBean.setUrlPatterns(Arrays.asList("/**"));
@@ -46,6 +47,10 @@ public class DruidConfig {
         map.put("exclusions", "*.js,*.css,/druid/*");
         filterRegistrationBean.setInitParameters(map);
         return filterRegistrationBean;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Integer.toString(40, 16));
     }
 
 }

@@ -26,8 +26,7 @@ public class DbUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        String userName = EncryptUtil.aesDecrypt(s);
-        User user = userService.findByUerName(userName);
+        User user = userService.findByUerName(s);
         if (user == null){
             throw new UsernameNotFoundException("用户不存在！");
         }

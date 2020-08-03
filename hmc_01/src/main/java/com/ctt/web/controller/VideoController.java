@@ -16,9 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URLEncoder;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * 视频后端控制器
@@ -48,21 +53,23 @@ public class VideoController {
     public void priviewVideo(String fileKey, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String rangeString = request.getHeader("Range");
         long range = Long.valueOf(rangeString.substring(rangeString.indexOf("=") + 1, rangeString.indexOf("-")));
-        try (ServletOutputStream outputStream = response.getOutputStream()) {
-            JSONObject file = sysFileService.getFileByID(fileKey);
-            response.setHeader("Content-Type", "video/" + file.getString("fileExt"));
-            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(file.getString("fileName") + "." + file.getString("fileExt"), "UTF-8"));
-            int fileSize = file.getInteger("fileSize");
-            response.setContentLength(fileSize);
-            response.setHeader("Content-Range", String.valueOf(range + (fileSize-1)));
-            response.setHeader("Accept-Ranges", "bytes");
-            response.setHeader("Etag", "W/9767057-1323779115364");
-            String filePath = file.getString("filePath");
-            Files.copy(Paths.get(filePath), outputStream);
-            outputStream.flush();
+        JSONObject file = sysFileService.getFileByID(fileKey);
+        response.setHeader("Content-Type", "video/" + file.getString("fileExt"));
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(file.getString("fileName") + "." + file.getString("fileExt"), "UTF-8"));
+        int fileSize = file.getInteger("fileSize");
+        response.setContentLength(fileSize);
+        response.setHeader("Content-Range", String.valueOf(range + (fileSize-1)));
+        response.setHeader("Accept-Ranges", "bytes");
+        response.setHeader("Etag", "W/9767057-1323779115364");
+        String filePath = file.getString("filePath");
+        try (ServletOutputStream outputStream = response.getOutputStream();
+             FileChannel open = FileChannel.open(Paths.get(filePath), StandardOpenOption.READ);) {
+            WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+            open.transferTo(0,open.size(),writableByteChannel);
         } catch (Exception e) {
             throw e;
         }
+
     }
 
     @PostMapping("updateVideo")

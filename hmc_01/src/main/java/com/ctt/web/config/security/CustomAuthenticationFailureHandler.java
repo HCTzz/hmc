@@ -5,6 +5,7 @@ import com.ctt.response.WebResBean;
 import com.ctt.utils.ResponseUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -22,6 +23,7 @@ import java.io.PrintWriter;
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+        e.printStackTrace();
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_10010);
         ResponseUtils.out(httpServletRequest,httpServletResponse,resBean);
     }
