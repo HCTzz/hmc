@@ -1,13 +1,17 @@
 package com.ctt.web.service;
 
+import org.opencv.core.Core;
+import org.springframework.stereotype.Service;
+
 /**
  * @Description
  * @auther Administrator
  * @create 2020-03-06 下午 3:55
  */
+@Service
 public class BaseService {
 
-    /**
+      /**
      * 初始时间截 (2017-01-01)
      */
     private static final long INITIAL_TIME_STAMP = 1483200000000L;

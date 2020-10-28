@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.io.IOException;
  * @auther Administrator
  * @create 2020-03-25 上午 11:14
  */
-@Component
 public class AuthFilter implements Filter {
 
     @Override
@@ -32,7 +32,9 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
         response.setHeader("Access-Control-Allow-Headers", "token,remember");
+        System.out.println("auth ... ");
         filterChain.doFilter(servletRequest, servletResponse);
+
     }
 
     @Override

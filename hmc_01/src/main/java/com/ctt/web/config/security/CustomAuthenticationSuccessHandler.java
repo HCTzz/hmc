@@ -31,14 +31,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         //用户信息 默认w诶用户名
-        Object principal = authentication.getPrincipal();
+        UserInfo principal = (UserInfo) authentication.getPrincipal();
         //凭证，默认为密码
-        Object credentials = authentication.getCredentials();
+//        Object credentials = authentication.getCredentials();
         //额外的信息IP等
-        Object details = authentication.getDetails();
+//        Object details = authentication.getDetails();
         //角色
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20000);
+        resBean.setData(principal);
         ResponseUtils.out(httpServletRequest,httpServletResponse,resBean);
     }
 }

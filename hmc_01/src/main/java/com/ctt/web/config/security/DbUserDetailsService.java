@@ -32,6 +32,8 @@ public class DbUserDetailsService implements UserDetailsService {
         }
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
         UserInfo userInfo = new UserInfo(user.getUsername(), user.getPassword(), simpleGrantedAuthorities);
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setRoles(user.getRoles());
         return userInfo;
     }
 }

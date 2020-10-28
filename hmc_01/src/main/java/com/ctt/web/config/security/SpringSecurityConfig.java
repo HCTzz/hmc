@@ -13,11 +13,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
@@ -51,9 +55,9 @@ import java.util.concurrent.locks.ReentrantLock;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public SpringSecurityConfig(){
-        super(true);
-    }
+//    public SpringSecurityConfig(){
+//        super(true);
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception{
@@ -67,14 +71,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        System.out.println(findByIndexNameSessionRepository);
-//        http.anonymous().disable();
+        http.anonymous().disable();
         //配置路径权限
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/druid/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/user/login","/video/list"
+                .antMatchers("/user/login","/video/list","/detect/idcard"
                 ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList"
                 ,"/photo/photoList","/sysFile/fileList","/sysFile/getFile","/sysFile/priviewImg").permitAll()
                 .anyRequest().authenticated();
@@ -89,16 +92,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addLogoutHandler(logoutHandler)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout","POST"))
-                .logoutSuccessHandler(customLogoutSuccessHandler).permitAll()
-                .and()
-                .apply(mobileAuthenticationSecurityConfig);
-        http.rememberMe().rememberMeParameter("remember").tokenRepository(redisPersistentTokenRepository).userDetailsService(dbUserDetailsService);
-        SessionRegistry s = sessionRegistry();
+                .logoutSuccessHandler(customLogoutSuccessHandler).permitAll();
+//                .and()
+//                .apply(mobileAuthenticationSecurityConfig);
+//        http.rememberMe().rememberMeParameter("remember").tokenRepository(redisPersistentTokenRepository).userDetailsService(dbUserDetailsService);
         http.cors().and()
                 .csrf()
                 .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, resp, authException) -> {
+                    System.out.println(authException);
+                });
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .sessionManagement()
+                http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.NEVER)
                 .sessionAuthenticationFailureHandler(new AuthenticationFailureHandler() {
                     @Override
                     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
@@ -110,17 +117,31 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 //false之后登录踢掉之前登录,true则不允许之后登录
 //                .expiredSessionStrategy(sessionInformationExpiredStrategy())
                 .maxSessionsPreventsLogin(false)
-                .sessionRegistry(s);
+                .sessionRegistry(sessionRegistry());
 
         //配置错误处理
         http.exceptionHandling()
                 .authenticationEntryPoint(loginUrlAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler);
 
-        http.addFilterAt(new ConcurrentSessionFilter(s, event -> {
-            ResponseUtils.out(event.getRequest(),event.getResponse(),WebResBean.createResBean(SystemStatusEnum.E_20014));
-        }), ConcurrentSessionFilter.class);
+        http.addFilterAt(concurrentSessionFilter(), ConcurrentSessionFilter.class);
+        http.addFilterAt(securityContextPersistenceFilter(), SecurityContextPersistenceFilter.class);
+//        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
 
+    @Bean
+    public ConcurrentSessionFilter concurrentSessionFilter(){
+        ConcurrentSessionFilter c = new ConcurrentSessionFilter(sessionRegistry(),event -> {
+            System.out.println("event : " + event);
+            ResponseUtils.out(event.getRequest(),event.getResponse(),WebResBean.createResBean(SystemStatusEnum.E_20014));
+        });
+        return c;
+    }
+
+    @Bean
+    public SecurityContextPersistenceFilter securityContextPersistenceFilter(){
+        SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter(new HttpSessionSecurityContextRepository());
+        return filter;
     }
 
     @Bean

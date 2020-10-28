@@ -1,6 +1,8 @@
 package com.ctt.web.config;
 
+import com.ctt.web.filter.AuthFilter;
 import com.ctt.web.interceptor.AuthInterceptor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
@@ -33,6 +35,16 @@ public class WebConfiguration implements WebMvcConfigurer {
 //                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList"
 //                ,"/photo/photoList","/sysFile/filelist","/sysFile/getFile","/sysFile/priviewImg"
 //                );
+    }
+
+    @Bean
+    public FilterRegistrationBean buildAFilter() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setOrder(0);
+        filterRegistrationBean.setFilter(new AuthFilter());
+        filterRegistrationBean.setName("authFilter");
+        filterRegistrationBean.addUrlPatterns("/*");
+        return filterRegistrationBean;
     }
 
 

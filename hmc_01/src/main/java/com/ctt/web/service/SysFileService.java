@@ -6,23 +6,28 @@ import com.ctt.utils.FileUtils;
 import com.ctt.utils.ThreadUtil;
 import com.ctt.web.enums.FileType;
 import com.ctt.web.mapper.SysFileMapper;
+import com.google.common.io.FileBackedOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 import ws.schild.jave.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Description
@@ -46,6 +51,8 @@ public class SysFileService extends BaseService {
 
     @Value("${fileUploadPath}")
     private String fileUploadPath;
+
+    String img_reg = "^data:image/[a-z]*;base64,";
 
     public JSONObject getFileByID(String filekey) {
         return sysFileMapper.getFileByID(filekey);
@@ -135,6 +142,44 @@ public class SysFileService extends BaseService {
         json.put("filePath", this.fileUploadPath + fileKey);
         return json;
     }
+
+    public String uploadImgWithBase64Str(String imgs) throws IOException {
+        BASE64Decoder decoder = new BASE64Decoder();
+        Pattern pattern = Pattern.compile(img_reg);
+        Matcher matcher = pattern.matcher(imgs);
+        while (matcher.find()) {
+            String str = matcher.group();
+            String ext = str.substring(11, (str.length() - 8));
+            // Base64解码
+            int index = imgs.indexOf(str);
+            imgs = imgs.substring(index + str.length());
+//            imgs =  java.net.URLDecoder.decode(imgs, "UTF-8");
+            byte[] b = decoder.decodeBuffer(imgs);
+            for (int i = 0; i < b.length; ++i) {
+                // 调整异常数据
+                if (b[i] < 0) {
+                    b[i] += 256;
+                }
+            }
+            String fileKey = nextId();
+            String path = getFilePath("detect", fileKey, "png");
+            File dfile = new File(path);
+            File parentFile = dfile.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+            try(FileOutputStream stream = new FileOutputStream(dfile);
+                ){
+                stream.write(b);
+            }catch (Exception e){
+                throw e;
+            }
+            return path;
+        }
+        return null;
+    }
+
+
 
     public void deleteFile(@NotNull String fileKey) throws IOException {
         JSONObject file = sysFileMapper.getFileByID(fileKey);

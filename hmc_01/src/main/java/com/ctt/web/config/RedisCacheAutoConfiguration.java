@@ -41,9 +41,9 @@ public class RedisCacheAutoConfiguration {
         // 源码默认为Lax
         // private String sameSite = "Lax";
 //        cookieSerializer.setSameSite(null);
-        cookieSerializer.setCookieName("SESSIONID");
+        cookieSerializer.setCookieName("SID");
 //        cookieSerializer.setCookieMaxAge(3000);
-        cookieSerializer.setUseHttpOnlyCookie(false);
+        cookieSerializer.setUseHttpOnlyCookie(true);
         cookieSerializer.setCookiePath("/");
         return cookieSerializer;
     }

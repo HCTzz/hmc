@@ -23,6 +23,9 @@ public class LoginUrlAuthenticationEntryPoint implements AuthenticationEntryPoin
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+        System.out.println("异常 ： " + e);
+        //InsufficientAuthenticationException: Full authentication is required to access this resource
+        //AuthenticationCredentialsNotFoundException
         WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_20011);
         ResponseUtils.out(request,response,resBean);
 

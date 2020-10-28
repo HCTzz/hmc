@@ -1,9 +1,10 @@
 package com.ctt;
 
+import lombok.EqualsAndHashCode;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,7 +23,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @EnableScheduling
 @ComponentScan(value = "com.ctt.*")
 @MapperScan(basePackages = "com.ctt.web.mapper")
-@EnableDiscoveryClient
 public class HmcApplication {
 
 //    interface  TestService{
@@ -37,10 +37,10 @@ public class HmcApplication {
 //                return method.invoke(proxy,args);
 //            }
 //        });
-        ReentrantLock reentrantLock = new ReentrantLock();
-        reentrantLock.lock();
-        reentrantLock.unlock();
-        Condition condition = reentrantLock.newCondition();
+//        ReentrantLock reentrantLock = new ReentrantLock();
+//        reentrantLock.lock();
+//        reentrantLock.unlock();
+//        Condition condition = reentrantLock.newCondition();
         SpringApplication.run(HmcApplication.class, args);
     }
 
