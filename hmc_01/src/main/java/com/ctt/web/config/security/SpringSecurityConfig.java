@@ -7,6 +7,7 @@ import com.ctt.web.config.security.test.MobileAuthenticationSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -71,16 +72,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.anonymous().disable();
+//        http.anonymous().disable();
         //配置路径权限
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/druid/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/user/login","/video/list","/detect/idcard"
-                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList"
-                ,"/photo/photoList","/sysFile/fileList","/sysFile/getFile","/sysFile/priviewImg").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/**").permitAll();
+//                .antMatchers("/druid/**").permitAll()
+//                .antMatchers("/actuator/**").permitAll()
+//                .antMatchers("/user/login","/video/list","/detect/idcard"
+//                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList/**"
+//                ,"/photo/photoList","/sysFile/fileList","/sysFile/getFile","/sysFile/priviewImg").permitAll().and()
+//                .authorizeRequests().anyRequest().authenticated();
 
         //配置登陆登出接口
         http.formLogin().
@@ -149,10 +150,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new CustomSessionInformationExpiredStrategy();
     }
 
+//    @ConditionalOnExpression("'${session.registry}'.equals('redis')")
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SpringSessionBackedSessionRegistry(findByIndexNameSessionRepository);
     }
+
+//    @ConditionalOnExpression("'${session.registry}'.equals('memory')")
+//    @Bean
+//    public SessionRegistry sessionRegistry() {
+//        return new SpringSessionBackedSessionRegistry(findByIndexNameSessionRepository);
+//    }
 
     /**
      * 密码加密

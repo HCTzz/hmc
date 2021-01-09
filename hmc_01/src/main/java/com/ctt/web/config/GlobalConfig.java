@@ -1,6 +1,9 @@
 package com.ctt.web.config;
 
+import com.ctt.web.interceptor.SqlLogInterceptor;
 import io.lettuce.core.RedisClient;
+import org.apache.ibatis.plugin.Interceptor;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +16,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GlobalConfig {
 
-
+//    @Bean
+//    ConfigurationCustomizer mybatisConfigurationCustomizer() {
+//        return new ConfigurationCustomizer() {
+//            @Override
+//            public void customize(org.apache.ibatis.session.Configuration configuration) {
+//                configuration.addInterceptor(new SqlLogInterceptor());
+//            }
+//        };
+//    }
 
 }

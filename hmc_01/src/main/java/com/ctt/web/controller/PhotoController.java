@@ -1,10 +1,12 @@
 package com.ctt.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ctt.component.Log;
 import com.ctt.constant.SystemStatusEnum;
 import com.ctt.response.WebResBean;
 import com.ctt.web.bean.Photo;
 import com.ctt.web.service.PhotoService;
+import com.ctt.web.util.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +36,14 @@ public class PhotoController {
      * @param hasOwer    返回值是否包含上级本身记录
      * @return
      */
-    @GetMapping("photoList")
-    public WebResBean photoList(String pid, String searchName, String hasOwer, Integer page, Integer limit, Authentication authentication) {
+    private final InheritableThreadLocal<String> threadLocal = new InheritableThreadLocal<>();
+
+    @PostMapping("photoList")
+    @Log(descr = "图片列表接口")
+    public WebResBean photoList(String pid, String searchName, String hasOwer, Integer page, Integer limit, Authentication authentication) throws IOException {
+//        Photo photo = new Photo();
+//        photo.setId("12");
+//        photoService.updatePhoto(photo);
         JSONObject photoList = photoService.getPhotoList(pid, page, limit, searchName, hasOwer);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
         wsb.setData(photoList);
@@ -49,6 +57,7 @@ public class PhotoController {
      * @return
      */
     @PostMapping("addPhoto")
+    @Log(descr = "添加图片")
     public WebResBean addPhoto(Photo photo) {
         Photo photo1 = photoService.addPhoto(photo);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
@@ -77,6 +86,7 @@ public class PhotoController {
      * @return
      */
     @PostMapping("updatePhoto")
+    @Log(descr = "更新图片")
     public WebResBean updatePhoto(Photo photo) {
         Photo photo1 = photoService.updatePhoto(photo);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);
@@ -92,6 +102,7 @@ public class PhotoController {
      * @throws IOException
      */
     @PostMapping("deletePhoto")
+    @Log(descr = "删除图片")
     public WebResBean deletePhoto(String id) throws IOException {
         photoService.deletePhoto(id);
         WebResBean wsb = WebResBean.createResBean(SystemStatusEnum.E_20000);

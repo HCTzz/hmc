@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @Description
@@ -60,9 +62,12 @@ public class GlobalExceptionHandler {
             int lineNumber = element.getLineNumber();
             errorPosition = fileName + ":" + lineNumber;
         }
+        req.getParameterMap().forEach((k,v) -> {
+            System.out.println(Arrays.stream(v).collect(Collectors.joining(",")));
+        });
         WebResBean rsb = WebResBean.createResBean(SystemStatusEnum.E_400);
-        JSONObject errorObject = new JSONObject();
-        logger.error("异常信息,请求路径【{}】,错误位置【{}】,错误信息【{}】", req.getRequestURI(), errorPosition, e.getMessage());
+//        JSONObject errorObject = new JSONObject();
+//        logger.error("异常信息,请求路径【{}】,错误位置【{}】,错误信息【{}】", req.getRequestURI(), errorPosition, e.getMessage());
         return rsb;
     }
 

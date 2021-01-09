@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class HttpFilter implements Filter, ApplicationContextAware {
 
-    private Logger log = LoggerFactory.getLogger(SysFileService.class);
+    private Logger log = LoggerFactory.getLogger(HttpFilter.class);
 
     private static ApplicationContext context;
 
@@ -35,7 +35,6 @@ public class HttpFilter implements Filter, ApplicationContextAware {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.debug("request --- ip【{}】url【】time【】", request.getRemoteHost(), request.getRequestURI(), LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE));
         HttpServletResponse res = (HttpServletResponse) servletResponse;
         filterChain.doFilter(servletRequest, servletResponse);
     }

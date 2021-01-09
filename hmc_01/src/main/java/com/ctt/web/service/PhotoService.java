@@ -87,4 +87,8 @@ public class PhotoService extends BaseService {
         photoMapper.deletePhoto(id);
     }
 
+    public void  testDeletePhoto(String id){
+        photoMapper.deletePhoto(id);
+    }
+
 }
