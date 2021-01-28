@@ -1,5 +1,11 @@
 package com.ctt;
 
+import com.ctt.web.bean.Photo;
+import com.ctt.web.service.PhotoService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+import javax.annotation.Resource;
 import java.util.HashMap;
 
 /**
@@ -10,9 +16,16 @@ import java.util.HashMap;
 public class Test {
 
     public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.refresh();
+        PhotoService service = context.getBean(PhotoService.class);
 
 
+    }
 
+    @Bean
+    public PhotoService photoService(){
+        return new PhotoService();
     }
 
 }

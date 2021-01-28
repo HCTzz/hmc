@@ -19,12 +19,12 @@ public class FilePreviewApplicationTests {
 //    @Resource
 //    public com.alibaba.druid.pool.DruidDataSource dataSource;
 
-    @Autowired
-    private ApplicationContext context;
+//    @Autowired
+//    private ApplicationContext context;
 
     @Test
     public void contextLoads() throws InterruptedException, IOException {
-        context.getBean("");
+//        context.getBean("");
 //        Enumeration<URL> resources = ClassLoader.getSystemResources("META-INF/spring-autoconfigure-metadata.properties");
 //        int i = 0;
 //        while (resources.hasMoreElements()) {

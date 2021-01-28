@@ -50,4 +50,21 @@ public class UserInfo extends User implements Serializable {
     public void setDeptId(String deptId) {
         this.deptId = deptId;
     }
+
+    @Override
+    public String toString() {
+        return this.getUsername();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getUsername().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.toString().equals(obj.toString());
+    }
+
+
 }

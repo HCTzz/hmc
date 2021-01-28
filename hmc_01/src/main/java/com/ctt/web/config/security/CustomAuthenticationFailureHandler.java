@@ -23,11 +23,15 @@ import java.io.PrintWriter;
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        System.out.println("登陆异常 ： " + e);
         //LockedException
         //DisabledException
         //AccountExpiredException
-        WebResBean resBean = WebResBean.createResBean(SystemStatusEnum.E_10010);
+        WebResBean resBean = null;
+        if(e instanceof SessionAuthenticationException){
+            resBean = WebResBean.createResBean(SystemStatusEnum.E_20014);
+        }else{
+            resBean = WebResBean.createResBean(SystemStatusEnum.E_10010);
+        }
         ResponseUtils.out(httpServletRequest,httpServletResponse,resBean);
     }
 }

@@ -71,7 +71,7 @@ public class WebLog {
 
     private String errorMsg ;
 
-    private Exception e;
+//    private Exception e;
 
     private List<String> sqlList;
 
@@ -95,13 +95,13 @@ public class WebLog {
         return position;
     }
 
-    public Exception getE() {
-        return e;
-    }
-
-    public void setE(Exception e) {
-        this.e = e;
-    }
+//    public Exception getE() {
+//        return e;
+//    }
+//
+//    public void setE(Exception e) {
+//        this.e = e;
+//    }
 
     public void setPosition(String position) {
         this.position = position;

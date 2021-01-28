@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * @author HHF
@@ -51,13 +52,12 @@ public class WebLogAspect {
     @AfterReturning(value="pontCut()",returning = "result")
     public void doAfterAdvice(JoinPoint joinPoint, Object result){
         WebLog webLog = createWebLog(joinPoint,result);
-        Map<String, Object> logMap = createLogMap(webLog);
+        Map<String, Object> logMap = createLogMap(webLog,null);
         log.warn(Markers.appendEntries(logMap), JSONObject.toJSON(webLog).toString());
     }
 
     @AfterThrowing(value = "pontCut()", throwing = "e")
     public void afterThorwingMethod(JoinPoint joinPoint, Exception e) {
-        System.out.println(124);
         WebLog webLog = createWebLog(joinPoint,null);
         if (e.getStackTrace().length > 0) {
             StackTraceElement element = e.getStackTrace()[0];
@@ -66,28 +66,29 @@ public class WebLogAspect {
             String errorPosition = fileName + ":" + lineNumber;
             webLog.setPosition(errorPosition);
             StackTraceElement[] stackTrace = e.getStackTrace();
-            int length = stackTrace.length;
-            int availables = length > 3 ? 3 : length;
-            if(availables > 0){
-                StackTraceElement[] tstack = new StackTraceElement[availables];
-                for (int i = 0 ; i < availables ; i++){
-                    tstack[i] = stackTrace[i];
-                }
-                e.setStackTrace(tstack);
-            }
-            webLog.setE(e);
+//            int length = stackTrace.length;
+////            int availables = length > 3 ? 3 : length;
+////            if(availables > 0){
+////                StackTraceElement[] tstack = new StackTraceElement[availables];
+////                for (int i = 0 ; i < availables ; i++){
+////                    tstack[i] = stackTrace[i];
+////                }
+////                e.setStackTrace(tstack);
+////            }
+////            webLog.setE(e);
         }
-        Map<String, Object> logMap = createLogMap(webLog);
+        Map<String, Object> logMap = createLogMap(webLog,e.getStackTrace());
         log.error(Markers.appendEntries(logMap), JSONObject.toJSON(webLog).toString());
     }
 
-    private Map<String,Object> createLogMap(WebLog webLog){
+    private Map<String,Object> createLogMap(WebLog webLog,StackTraceElement[] stackTrace){
         Map<String,Object> logMap = new HashMap<>();
         logMap.put("url",webLog.getUrl());
         logMap.put("method",webLog.getMethod());
         logMap.put("parameter",webLog.getParameter());
         logMap.put("spendTime",webLog.getSpendTime());
         logMap.put("descr",webLog.getDescr());
+        logMap.put("Trace",stackTrace);
         return logMap;
     }
 
@@ -158,6 +159,11 @@ public class WebLogAspect {
         } else {
             return argList;
         }
+    }
+
+    public static void main(String[] args) {
+        ConcurrentSkipListMap<Object, Object> skipListMap = new ConcurrentSkipListMap<>();
+        skipListMap.put("1",1);
     }
 
 }

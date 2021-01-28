@@ -75,13 +75,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.anonymous().disable();
         //配置路径权限
         http.authorizeRequests()
-                .antMatchers("/**").permitAll();
-//                .antMatchers("/druid/**").permitAll()
-//                .antMatchers("/actuator/**").permitAll()
-//                .antMatchers("/user/login","/video/list","/detect/idcard"
-//                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList/**"
-//                ,"/photo/photoList","/sysFile/fileList","/sysFile/getFile","/sysFile/priviewImg").permitAll().and()
-//                .authorizeRequests().anyRequest().authenticated();
+                .antMatchers("/").permitAll()
+                .antMatchers("/druid/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/user/login","/video/list","/detect/idcard"
+                ,"/video/priviewVideo","/vlog/list","/vlog/getVlog","/photo/photoList/**"
+                ,"/photo/photoList","/sysFile/fileList","/sysFile/getFile","/sysFile/priviewImg").permitAll().and()
+                .authorizeRequests().anyRequest().authenticated();
 
         //配置登陆登出接口
         http.formLogin().
@@ -96,7 +96,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler(customLogoutSuccessHandler).permitAll();
 //                .and()
 //                .apply(mobileAuthenticationSecurityConfig);
-//        http.rememberMe().rememberMeParameter("remember").tokenRepository(redisPersistentTokenRepository).userDetailsService(dbUserDetailsService);
+        http.rememberMe().rememberMeParameter("remember").tokenRepository(redisPersistentTokenRepository);
+                //.userDetailsService(dbUserDetailsService);
         http.cors().and()
                 .csrf()
                 .disable()
